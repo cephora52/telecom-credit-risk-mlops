@@ -1,0 +1,102 @@
+{
+  "algorithm": "XGBoost",
+  "target": "default_risk",
+  "features": [
+    "operator",
+    "credit_score",
+    "credit_rating",
+    "tenure_months",
+    "avg_monthly_spend_ngn",
+    "recharge_frequency_per_month",
+    "payment_consistency_score",
+    "late_payment_count",
+    "account_type"
+  ],
+  "classes": [
+    "high",
+    "low",
+    "medium"
+  ],
+  "train_rows": 400000,
+  "test_rows": 100000,
+  "test_size": 0.2,
+  "random_state": 42,
+  "parameters": {
+    "objective": "multi:softprob",
+    "n_estimators": 300,
+    "max_depth": 6,
+    "learning_rate": 0.1,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "eval_metric": "mlogloss",
+    "tree_method": "hist",
+    "random_state": 42,
+    "n_jobs": -1
+  },
+  "accuracy": 0.637,
+  "precision_macro": 0.485781057761366,
+  "recall_macro": 0.5264764772163252,
+  "f1_macro": 0.4558533459390753,
+  "auc_macro_ovr": 0.6557536323022957,
+  "classification_report": {
+    "high": {
+      "precision": 0.4957883230452675,
+      "recall": 0.6928295444334621,
+      "f1-score": 0.5779768374498707,
+      "support": 22258.0
+    },
+    "low": {
+      "precision": 0.7027689077468178,
+      "recall": 0.8831030818278427,
+      "f1-score": 0.7826828297918984,
+      "support": 54578.0
+    },
+    "medium": {
+      "precision": 0.25878594249201275,
+      "recall": 0.0034968053876705233,
+      "f1-score": 0.00690037057545683,
+      "support": 23164.0
+    },
+    "accuracy": 0.637,
+    "macro avg": {
+      "precision": 0.485781057761366,
+      "recall": 0.5264764772163252,
+      "f1-score": 0.4558533459390753,
+      "support": 100000.0
+    },
+    "weighted avg": {
+      "precision": 0.5538549551323236,
+      "recall": 0.637,
+      "f1-score": 0.5574171211635134,
+      "support": 100000.0
+    }
+  },
+  "confusion_matrix": {
+    "labels": [
+      "high",
+      "low",
+      "medium"
+    ],
+    "values": [
+      [
+        15421,
+        6742,
+        95
+      ],
+      [
+        6243,
+        48198,
+        137
+      ],
+      [
+        9440,
+        13643,
+        81
+      ]
+    ]
+  },
+  "library_versions": {
+    "scikit_learn": "1.6.1",
+    "xgboost": "3.4.1"
+  }
+}

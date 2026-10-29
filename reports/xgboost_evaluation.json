@@ -1,0 +1,245 @@
+{
+  "issue": 2,
+  "algorithm": "XGBoost",
+  "target": "default_risk",
+  "classes": [
+    "high",
+    "low",
+    "medium"
+  ],
+  "split": {
+    "test_size": 0.2,
+    "val_size_of_train": 0.2,
+    "random_state": 42,
+    "stratified": true,
+    "rows": {
+      "fit": 64000,
+      "val": 16000,
+      "test": 20000
+    }
+  },
+  "selected_experiment": "D_regularise + variables calcul\u00e9es",
+  "selected_parameters": {
+    "colsample_bytree": 0.8,
+    "learning_rate": 0.05,
+    "max_depth": 4,
+    "min_child_weight": 20,
+    "n_estimators": 1000,
+    "reg_lambda": 5.0,
+    "subsample": 0.8
+  },
+  "best_iteration": 95,
+  "uses_engineered_features": true,
+  "baseline_test": {
+    "accuracy": 0.6275,
+    "f1_macro": 0.47091301768468713,
+    "auc_macro_ovr": 0.6582657222045506,
+    "per_class": {
+      "high": {
+        "precision": 0.502708192281652,
+        "recall": 0.6705802664258298,
+        "f1-score": 0.5746348070039663,
+        "support": 4429.0
+      },
+      "low": {
+        "precision": 0.7030117330543307,
+        "recall": 0.8589298758217677,
+        "f1-score": 0.7731886738174496,
+        "support": 10952.0
+      },
+      "medium": {
+        "precision": 0.24331926863572434,
+        "recall": 0.037453994371075994,
+        "f1-score": 0.06491557223264541,
+        "support": 4619.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        2970,
+        1289,
+        170
+      ],
+      [
+        1177,
+        9407,
+        368
+      ],
+      [
+        1761,
+        2685,
+        173
+      ]
+    ],
+    "class_weights_applied": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "final_test": {
+    "accuracy": 0.62405,
+    "f1_macro": 0.4834343067369819,
+    "auc_macro_ovr": 0.6497077898481861,
+    "per_class": {
+      "high": {
+        "precision": 0.5015709156193896,
+        "recall": 0.5046285843305487,
+        "f1-score": 0.5030951041080473,
+        "support": 4429.0
+      },
+      "low": {
+        "precision": 0.7033745212804393,
+        "recall": 0.8887874360847334,
+        "f1-score": 0.7852849824533097,
+        "support": 10952.0
+      },
+      "medium": {
+        "precision": 0.3002932551319648,
+        "recall": 0.11084650357220177,
+        "f1-score": 0.16192283364958887,
+        "support": 4619.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        2235,
+        1324,
+        870
+      ],
+      [
+        895,
+        9734,
+        323
+      ],
+      [
+        1326,
+        2781,
+        512
+      ]
+    ],
+    "class_weights_applied": [
+      0.6,
+      1.0,
+      1.0
+    ]
+  },
+  "validation_comparison": [
+    {
+      "essai": "A_reference (train.py)",
+      "AUC val": 0.6501582860028399,
+      "F1 macro (argmax)": 0.4688239807447035,
+      "rappel medium (argmax)": 0.04790257104194858,
+      "F1 macro (poids r\u00e9gl\u00e9s)": 0.48179737366541814,
+      "rappel medium (poids)": 0.13369418132611638,
+      "F1 medium (poids)": 0.17970170971262278,
+      "poids [high, low, medium]": [
+        0.7,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "essai": "B_regularise + early stopping",
+      "AUC val": 0.6454136375108066,
+      "F1 macro (argmax)": 0.45390055248539757,
+      "rappel medium (argmax)": 0.0,
+      "F1 macro (poids r\u00e9gl\u00e9s)": 0.4810554599243764,
+      "rappel medium (poids)": 0.10906630581867388,
+      "F1 medium (poids)": 0.16033419534513627,
+      "poids [high, low, medium]": [
+        0.6,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "essai": "C_regularise sans poids",
+      "AUC val": 0.6728036031004555,
+      "F1 macro (argmax)": 0.45373108244842913,
+      "rappel medium (argmax)": 0.0,
+      "F1 macro (poids r\u00e9gl\u00e9s)": 0.4789728373432778,
+      "rappel medium (poids)": 0.12232746955345061,
+      "F1 medium (poids)": 0.1717325227963526,
+      "poids [high, low, medium]": [
+        1.8,
+        1.0,
+        2.9
+      ]
+    },
+    {
+      "essai": "D_regularise + variables calcul\u00e9es",
+      "AUC val": 0.6469524331709834,
+      "F1 macro (argmax)": 0.45390055248539757,
+      "rappel medium (argmax)": 0.0,
+      "F1 macro (poids r\u00e9gl\u00e9s)": 0.48298610691258587,
+      "rappel medium (poids)": 0.11529093369418132,
+      "F1 medium (poids)": 0.1669278996865204,
+      "poids [high, low, medium]": [
+        0.6,
+        1.0,
+        1.0
+      ]
+    }
+  ],
+  "leakage_audit": [
+    {
+      "variable": "operator",
+      "AUC seule": 0.49661570028765273,
+      "AUC sans cette variable": 0.6725522496527514,
+      "chute si retir\u00e9e": 0.0009178844514045048
+    },
+    {
+      "variable": "credit_score",
+      "AUC seule": 0.675686450356802,
+      "AUC sans cette variable": 0.6743847852271445,
+      "chute si retir\u00e9e": -0.0009146511229886078
+    },
+    {
+      "variable": "credit_rating",
+      "AUC seule": 0.6745459534238712,
+      "AUC sans cette variable": 0.6729527829703899,
+      "chute si retir\u00e9e": 0.000517351133766053
+    },
+    {
+      "variable": "tenure_months",
+      "AUC seule": 0.6355388323811485,
+      "AUC sans cette variable": 0.6728868655257277,
+      "chute si retir\u00e9e": 0.0005832685784281644
+    },
+    {
+      "variable": "avg_monthly_spend_ngn",
+      "AUC seule": 0.535749324993008,
+      "AUC sans cette variable": 0.6716585617461671,
+      "chute si retir\u00e9e": 0.0018115723579887888
+    },
+    {
+      "variable": "recharge_frequency_per_month",
+      "AUC seule": 0.5619954554866545,
+      "AUC sans cette variable": 0.6743339392553422,
+      "chute si retir\u00e9e": -0.0008638051511863365
+    },
+    {
+      "variable": "payment_consistency_score",
+      "AUC seule": 0.5550818152195357,
+      "AUC sans cette variable": 0.6757239480052554,
+      "chute si retir\u00e9e": -0.0022538139010994662
+    },
+    {
+      "variable": "late_payment_count",
+      "AUC seule": 0.6276481685957901,
+      "AUC sans cette variable": 0.6738079911833994,
+      "chute si retir\u00e9e": -0.0003378570792434976
+    },
+    {
+      "variable": "account_type",
+      "AUC seule": 0.5017435967698355,
+      "AUC sans cette variable": 0.6728170715131832,
+      "chute si retir\u00e9e": 0.0006530625909727528
+    }
+  ],
+  "library_versions": {
+    "scikit_learn": "1.6.1",
+    "xgboost": "3.4.1"
+  }
+}

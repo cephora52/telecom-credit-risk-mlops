@@ -1,4 +1,4 @@
-﻿# Prédiction du risque d’impayé télécom avec MLOps
+﻿# Prédiction du risque d’impayé télécom 
 
 ## Objectif
 

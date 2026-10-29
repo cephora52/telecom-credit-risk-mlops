@@ -1,4 +1,4 @@
-﻿# Prédiction du risque d’impayé télécom 
+# Prédiction du risque d’impayé télécom 
 
 ## Objectif
 
@@ -40,3 +40,13 @@ Les identifiants client et numéro de téléphone ne seront pas utilisés comme 
 - `.github/workflows/` : automatisation GitHub Actions
 
 Les dossiers sont créés. Le code d’entraînement, l’API, le modèle et le pipeline automatisé restent à réaliser.
+
+## API de prédiction
+
+L’API FastAPI (`/health`, `/predict`) est documentée dans [`docs/api.md`](docs/api.md).
+
+```bash
+pip install -r requirements-api.txt
+uvicorn telecom_mlops.api:app --app-dir src --reload
+pytest
+```

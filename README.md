@@ -43,7 +43,7 @@ Les dossiers sont créés. Le code d’entraînement, l’API, le modèle et le 
 
 ## API de prédiction
 
-L’API FastAPI (`/health`, `/predict`) est documentée dans [`docs/api.md`](docs/api.md).
+L’API FastAPI (`/health`, `/predict`) est documentée dans [`docs/api.md`](docs/api.md). Une interface web est disponible sur `http://127.0.0.1:8000/` quand l’API est lancée.
 
 ```bash
 pip install -r requirements-api.txt

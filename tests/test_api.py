@@ -29,6 +29,14 @@ def fields_in_errors(response):
     return {error["field"] for error in response.json()["errors"]}
 
 
+# ------------------------------------------------------------ interface web
+def test_home_page_is_served(client):
+    response = client.get("/")
+    assert response.status_code == 200
+    assert "text/html" in response.headers["content-type"]
+    assert "/predict" in response.text
+
+
 # ---------------------------------------------------------------- /health
 def test_health_returns_ok_and_model_loaded(client):
     response = client.get("/health")

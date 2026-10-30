@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Risque d’impayé télécom</title>
+<style>
+  :root {
+    --bg: #f5f6f8; --card: #ffffff; --text: #1d2330; --muted: #5d6677; --border: #d9dde5;
+    --accent: #2457d6; --low: #1f8f4e; --medium: #d98a00; --high: #c93333; --errbg: #fdecec;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12151b; --card: #1b202a; --text: #e8ebf1; --muted: #9aa3b5; --border: #2c3341;
+      --accent: #6f95f5; --low: #4cc27f; --medium: #f0b233; --high: #ef6b6b; --errbg: #3a1f22;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; line-height: 1.45; }
+  main { max-width: 760px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; }
+  p.lead { margin: 0 0 20px; color: var(--muted); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+  label { display: block; font-size: .9rem; font-weight: 600; margin-bottom: 4px; }
+  small { display: block; color: var(--muted); font-weight: 400; margin-top: 2px; }
+  input, select { width: 100%; padding: 9px 10px; font-size: 1rem; color: var(--text);
+                  background: var(--bg); border: 1px solid var(--border); border-radius: 8px; }
+  input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .actions { margin-top: 18px; display: flex; gap: 10px; flex-wrap: wrap; }
+  button { font-size: 1rem; padding: 10px 18px; border-radius: 8px; border: 1px solid var(--border);
+           background: var(--card); color: var(--text); cursor: pointer; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  button:disabled { opacity: .6; cursor: wait; }
+  #result[hidden], #errors[hidden] { display: none; }
+  .badge { display: inline-block; padding: 6px 14px; border-radius: 999px; color: #fff; font-weight: 700; font-size: 1.1rem; }
+  .badge.low { background: var(--low); } .badge.medium { background: var(--medium); } .badge.high { background: var(--high); }
+  .bar-row { display: grid; grid-template-columns: 90px 1fr 56px; gap: 10px; align-items: center; margin-top: 10px; font-size: .95rem; }
+  .bar { height: 12px; background: var(--border); border-radius: 6px; overflow: hidden; }
+  .bar > span { display: block; height: 100%; }
+  .bar > span.low { background: var(--low); } .bar > span.medium { background: var(--medium); } .bar > span.high { background: var(--high); }
+  #errors { background: var(--errbg); border-color: var(--high); }
+  #errors ul { margin: 8px 0 0; padding-left: 20px; }
+  .note { color: var(--muted); font-size: .85rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Risque d’impayé télécom</h1>
+  <p class="lead">Renseignez les informations d’un client pour obtenir la classe de risque prédite par le modèle XGBoost.</p>
+
+  <form id="f" class="card" novalidate>
+    <div class="grid">
+      <div><label for="operator">Opérateur</label>
+        <select id="operator" name="operator">
+          <option>MTN</option><option>Airtel</option><option>Glo</option><option>9mobile</option>
+        </select></div>
+      <div><label for="account_type">Type de compte</label>
+        <select id="account_type" name="account_type">
+          <option value="prepaid">prepaid (prépayé)</option><option value="postpaid">postpaid (postpayé)</option>
+        </select></div>
+      <div><label for="credit_score">Score de crédit<small>de 300 à 1000</small></label>
+        <input id="credit_score" name="credit_score" type="number" step="any" value="720"></div>
+      <div><label for="credit_rating">Note de crédit</label>
+        <select id="credit_rating" name="credit_rating">
+          <option value="poor">poor (faible)</option><option value="fair">fair (moyenne)</option>
+          <option value="good" selected>good (bonne)</option><option value="excellent">excellent</option>
+        </select></div>
+      <div><label for="tenure_months">Ancienneté (mois)<small>entier ≥ 0</small></label>
+        <input id="tenure_months" name="tenure_months" type="number" step="1" value="36"></div>
+      <div><label for="avg_monthly_spend_ngn">Dépense mensuelle moyenne (NGN)<small>≥ 0</small></label>
+        <input id="avg_monthly_spend_ngn" name="avg_monthly_spend_ngn" type="number" step="any" value="25000"></div>
+      <div><label for="recharge_frequency_per_month">Recharges par mois<small>≥ 0</small></label>
+        <input id="recharge_frequency_per_month" name="recharge_frequency_per_month" type="number" step="any" value="15"></div>
+      <div><label for="payment_consistency_score">Régularité des paiements<small>de 0 à 1</small></label>
+        <input id="payment_consistency_score" name="payment_consistency_score" type="number" step="any" value="0.55"></div>
+      <div><label for="late_payment_count">Retards de paiement<small>entier ≥ 0</small></label>
+        <input id="late_payment_count" name="late_payment_count" type="number" step="1" value="2"></div>
+    </div>
+    <div class="actions">
+      <button type="submit" class="primary" id="go">Prédire le risque</button>
+      <button type="button" id="reset">Réinitialiser</button>
+    </div>
+  </form>
+
+  <section id="errors" class="card" hidden aria-live="polite"></section>
+
+  <section id="result" class="card" hidden aria-live="polite">
+    <div class="note">Classe de risque prédite</div>
+    <p><span id="badge" class="badge"></span></p>
+    <div id="bars"></div>
+  </section>
+
+  <p class="note">Outil de démonstration : le modèle est entraîné sur des données synthétiques et reconnaît mal la classe « medium ». Ses résultats ne doivent pas servir à une vraie décision de crédit.</p>
+</main>
+
+<script>
+(function () {
+  var NUMERIC = ["credit_score", "tenure_months", "avg_monthly_spend_ngn",
+                 "recharge_frequency_per_month", "payment_consistency_score", "late_payment_count"];
+  var TEXT = ["operator", "credit_rating", "account_type"];
+  var CLASS_LABELS = { low: "Risque faible", medium: "Risque moyen", high: "Risque élevé" };
+  var ORDER = ["low", "medium", "high"];
+
+  var form = document.getElementById("f");
+  var go = document.getElementById("go");
+  var resultBox = document.getElementById("result");
+  var errorsBox = document.getElementById("errors");
+  var defaults = {};
+  NUMERIC.concat(TEXT).forEach(function (id) { defaults[id] = form.elements[id].value; });
+
+  function showErrors(title, messages) {
+    errorsBox.textContent = "";
+    var strong = document.createElement("strong");
+    strong.textContent = title;
+    errorsBox.appendChild(strong);
+    var ul = document.createElement("ul");
+    messages.forEach(function (m) { var li = document.createElement("li"); li.textContent = m; ul.appendChild(li); });
+    errorsBox.appendChild(ul);
+    errorsBox.hidden = false;
+    resultBox.hidden = true;
+  }
+
+  function showResult(data) {
+    var badge = document.getElementById("badge");
+    badge.textContent = CLASS_LABELS[data.risk_class] || data.risk_class;
+    badge.className = "badge " + data.risk_class;
+    var bars = document.getElementById("bars");
+    bars.textContent = "";
+    ORDER.forEach(function (name) {
+      if (!(name in data.probabilities)) return;
+      var pct = data.probabilities[name] * 100;
+      var row = document.createElement("div"); row.className = "bar-row";
+      var label = document.createElement("span"); label.textContent = CLASS_LABELS[name];
+      var bar = document.createElement("div"); bar.className = "bar";
+      var fill = document.createElement("span"); fill.className = name; fill.style.width = pct.toFixed(1) + "%";
+      bar.appendChild(fill);
+      var value = document.createElement("span"); value.textContent = pct.toFixed(1) + " %";
+      row.appendChild(label); row.appendChild(bar); row.appendChild(value);
+      bars.appendChild(row);
+    });
+    resultBox.hidden = false;
+    errorsBox.hidden = true;
+  }
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+    var payload = {};
+    TEXT.forEach(function (id) { payload[id] = form.elements[id].value; });
+    NUMERIC.forEach(function (id) {
+      var raw = form.elements[id].value.trim();
+      payload[id] = raw === "" ? null : Number(raw);
+    });
+    go.disabled = true;
+    fetch("/predict", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+      .then(function (response) {
+        return response.json().then(function (data) { return { ok: response.ok, data: data }; });
+      })
+      .then(function (r) {
+        if (r.ok) { showResult(r.data); return; }
+        if (Array.isArray(r.data.errors)) {
+          showErrors("Données invalides :", r.data.errors.map(function (e) { return e.field + " : " + e.message; }));
+        } else {
+          showErrors("Erreur :", [r.data.detail || "Réponse inattendue du serveur."]);
+        }
+      })
+      .catch(function () {
+        showErrors("Erreur :", ["Impossible de joindre l’API. Vérifiez qu’elle est bien lancée."]);
+      })
+      .then(function () { go.disabled = false; });
+  });
+
+  document.getElementById("reset").addEventListener("click", function () {
+    Object.keys(defaults).forEach(function (id) { form.elements[id].value = defaults[id]; });
+    resultBox.hidden = true;
+    errorsBox.hidden = true;
+  });
+})();
+</script>
+</body>
+</html>

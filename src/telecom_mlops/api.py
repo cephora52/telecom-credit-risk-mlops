@@ -18,7 +18,7 @@ import joblib
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
 
 from telecom_mlops.config import MODEL_PATH
@@ -160,6 +160,12 @@ async def validation_error_handler(request: Request, exc: RequestValidationError
 # --------------------------------------------------------------------------
 # Endpoints
 # --------------------------------------------------------------------------
+@app.get("/", include_in_schema=False)
+def home() -> FileResponse:
+    """Interface web : formulaire pour tester la prédiction dans le navigateur."""
+    return FileResponse(Path(__file__).parent / "static" / "index.html")
+
+
 @app.get("/health")
 def health(request: Request) -> dict:
     """Indique que l'API répond et si le modèle est chargé."""

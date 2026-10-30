@@ -1,0 +1,10 @@
+# Suivi MLflow, registre de modèles et surveillance (issue #4)
+# Versions de scikit-learn et xgboost alignées sur requirements-api.txt et sur le modèle entraîné.
+mlflow>=2.14
+scipy>=1.11
+matplotlib>=3.8
+pandas
+numpy
+scikit-learn==1.6.1
+xgboost==3.4.1
+pytest>=8

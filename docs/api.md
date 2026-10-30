@@ -29,6 +29,12 @@ uvicorn telecom_mlops.api:app --app-dir src --reload
 Pour utiliser un autre fichier modèle : `MODEL_PATH=chemin/vers/modele.joblib` (variable
 d'environnement) avant la commande `uvicorn`.
 
+## Interface web
+
+Une fois l'API lancée, ouvrez http://127.0.0.1:8000/ : un formulaire permet de saisir les
+variables d'un client et d'afficher la classe de risque prédite avec ses probabilités.
+Les erreurs de validation de l'API y sont affichées en français.
+
 ## Endpoints
 
 ### `GET /health`

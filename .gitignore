@@ -7,3 +7,8 @@ mlruns/
 word.docx
 ~$word.docx
 /telecom_credit_scoring_data.csv
+
+mlflow.db
+mlartifacts/
+models/reference_sample.csv
+.ipynb_checkpoints/

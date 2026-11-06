@@ -6,93 +6,190 @@
 <title>Risque d’impayé télécom</title>
 <style>
   :root {
-    --bg: #f5f6f8; --card: #ffffff; --text: #1d2330; --muted: #5d6677; --border: #d9dde5;
-    --accent: #2457d6; --low: #1f8f4e; --medium: #d98a00; --high: #c93333; --errbg: #fdecec;
+    --bg: #edf1ef; --panel: #fbfcfb; --ink: #12302f; --muted: #587170; --line: #cfdad7;
+    --accent: #0f5c59; --accent-ink: #ffffff;
+    --low: #2f8f6b; --medium: #d9a021; --high: #c4443a; --err-bg: #fbeceb;
+    --low-text: #1f6f50; --medium-text: #8a6100; --high-text: #b03328;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
   @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #12151b; --card: #1b202a; --text: #e8ebf1; --muted: #9aa3b5; --border: #2c3341;
-      --accent: #6f95f5; --low: #4cc27f; --medium: #f0b233; --high: #ef6b6b; --errbg: #3a1f22;
+    :root {
+      --bg: #0d1717; --panel: #132222; --ink: #e4efed; --muted: #93aeab; --line: #263b3a;
+      --accent: #4fb8b1; --accent-ink: #06201f;
+      --low: #4cbf93; --medium: #e8b84a; --high: #ef6f65; --err-bg: #3a1f1d;
+      --low-text: #4cbf93; --medium-text: #e8b84a; --high-text: #ef6f65;
     }
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--text);
-         font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; line-height: 1.45; }
-  main { max-width: 760px; margin: 0 auto; padding: 24px 16px 48px; }
-  h1 { font-size: 1.5rem; margin: 0 0 4px; }
-  p.lead { margin: 0 0 20px; color: var(--muted); }
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
-  label { display: block; font-size: .9rem; font-weight: 600; margin-bottom: 4px; }
-  small { display: block; color: var(--muted); font-weight: 400; margin-top: 2px; }
-  input, select { width: 100%; padding: 9px 10px; font-size: 1rem; color: var(--text);
-                  background: var(--bg); border: 1px solid var(--border); border-radius: 8px; }
-  input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
-  .actions { margin-top: 18px; display: flex; gap: 10px; flex-wrap: wrap; }
-  button { font-size: 1rem; padding: 10px 18px; border-radius: 8px; border: 1px solid var(--border);
-           background: var(--card); color: var(--text); cursor: pointer; }
-  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
-  button:disabled { opacity: .6; cursor: wait; }
-  #result[hidden], #errors[hidden] { display: none; }
-  .badge { display: inline-block; padding: 6px 14px; border-radius: 999px; color: #fff; font-weight: 700; font-size: 1.1rem; }
-  .badge.low { background: var(--low); } .badge.medium { background: var(--medium); } .badge.high { background: var(--high); }
-  .bar-row { display: grid; grid-template-columns: 90px 1fr 56px; gap: 10px; align-items: center; margin-top: 10px; font-size: .95rem; }
-  .bar { height: 12px; background: var(--border); border-radius: 6px; overflow: hidden; }
-  .bar > span { display: block; height: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); line-height: 1.5; }
+  main { max-width: 1040px; margin: 0 auto; padding: 36px 20px 56px; }
+
+  header { margin-bottom: 28px; max-width: 620px; }
+  h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(1.9rem, 4vw, 2.6rem);
+       line-height: 1.1; letter-spacing: -0.01em; margin: 0 0 10px; }
+  .lead { margin: 0; color: var(--muted); font-size: 1.05rem; }
+
+  .layout { display: grid; gap: 22px; align-items: start; }
+  @media (min-width: 880px) { .layout { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); } .result-col { position: sticky; top: 20px; } }
+
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 24px; }
+  fieldset { border: 0; margin: 0 0 22px; padding: 0; min-width: 0; }
+  legend { font-family: var(--serif); font-size: 1.15rem; font-weight: 600; padding: 0; margin-bottom: 12px;
+           border-bottom: 1px solid var(--line); width: 100%; padding-bottom: 6px; }
+  .row { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); margin-bottom: 14px; }
+  .row.one { grid-template-columns: 1fr; }
+  .field > label, .field > .name { display: block; font-size: .92rem; font-weight: 600; margin-bottom: 5px; }
+  .hint { display: block; color: var(--muted); font-weight: 400; font-size: .82rem; margin-top: 1px; }
+
+  input[type="number"] { width: 100%; padding: 10px 12px; font: inherit; color: var(--ink); background: var(--bg);
+                         border: 1px solid var(--line); border-radius: 8px; }
+  input[type="number"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  .seg { position: relative; display: flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--bg); }
+  .seg input { position: absolute; opacity: 0; pointer-events: none; }
+  .seg label { flex: 1 1 0; text-align: center; padding: 9px 6px; font-size: .92rem; cursor: pointer;
+               border-left: 1px solid var(--line); white-space: nowrap; }
+  .seg input:first-of-type + label { border-left: 0; }
+  .seg input:checked + label { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+  .seg input:focus-visible + label { box-shadow: inset 0 0 0 2px var(--ink); }
+
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  button { font: inherit; padding: 11px 20px; border-radius: 8px; border: 1px solid var(--line);
+           background: transparent; color: var(--ink); cursor: pointer; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+  button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  button:disabled { opacity: .6; cursor: progress; }
+
+  /* Colonne résultat */
+  .gauge-wrap { text-align: center; }
+  svg.gauge { width: 100%; max-width: 340px; height: auto; display: block; margin: 0 auto; }
+  .zone { fill: none; stroke-width: 16; transition: opacity .4s; }
+  .zone.low { stroke: var(--low); } .zone.medium { stroke: var(--medium); } .zone.high { stroke: var(--high); }
+  .gauge[data-state="idle"] .zone { opacity: .22; }
+  .gauge[data-state="done"] .zone { opacity: .2; }
+  .gauge[data-state="done"] .zone.active { opacity: 1; }
+  .needle { fill: var(--ink); transform-origin: 120px 120px; transform: rotate(90deg); opacity: 0;
+            transition: transform .7s cubic-bezier(.2, .9, .3, 1.1), opacity .3s; }
+  .gauge[data-state="done"] .needle { opacity: 1; }
+  .hub { fill: var(--ink); }
+  .scale { display: flex; justify-content: space-between; max-width: 340px; margin: 2px auto 0; padding: 0 6px;
+           font-size: .85rem; color: var(--muted); }
+  .scale span.on { color: var(--ink); font-weight: 700; }
+
+  .verdict { font-family: var(--serif); font-size: 1.9rem; font-weight: 600; line-height: 1.15; margin: 14px 0 4px; }
+  .verdict.low { color: var(--low-text); } .verdict.medium { color: var(--medium-text); } .verdict.high { color: var(--high-text); }
+  .verdict.idle { color: var(--muted); font-size: 1.35rem; }
+  .meaning { margin: 0 0 16px; color: var(--muted); }
+  .probs { border-top: 1px solid var(--line); padding-top: 14px; }
+  .probs[hidden] { display: none; }
+  .bar-row { display: grid; grid-template-columns: 62px 1fr 52px; gap: 10px; align-items: center; margin-top: 8px; font-size: .92rem; }
+  .bar-row .pct { text-align: right; font-variant-numeric: tabular-nums; }
+  .bar { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; }
+  .bar > span { display: block; height: 100%; border-radius: 4px; transition: width .6s ease; }
   .bar > span.low { background: var(--low); } .bar > span.medium { background: var(--medium); } .bar > span.high { background: var(--high); }
-  #errors { background: var(--errbg); border-color: var(--high); }
-  #errors ul { margin: 8px 0 0; padding-left: 20px; }
-  .note { color: var(--muted); font-size: .85rem; }
+
+  .notice { margin-top: 16px; padding: 12px 14px; border-radius: 8px; background: var(--err-bg);
+            border-left: 4px solid var(--high); font-size: .93rem; }
+  .notice[hidden] { display: none; }
+  .notice strong { display: block; margin-bottom: 4px; }
+  .notice ul { margin: 0; padding-left: 18px; }
+
+  .foot { margin: 22px 0 0; max-width: 680px; color: var(--muted); font-size: .85rem; }
+  @media (prefers-reduced-motion: reduce) {
+    .needle, .zone, .bar > span { transition: none; }
+  }
 </style>
 </head>
 <body>
 <main>
-  <h1>Risque d’impayé télécom</h1>
-  <p class="lead">Renseignez les informations d’un client pour obtenir la classe de risque prédite par le modèle XGBoost.</p>
+  <header>
+    <h1>Risque d’impayé télécom</h1>
+    <p class="lead">Décrivez un client et le modèle XGBoost estime sa classe de risque : faible, moyen ou élevé.</p>
+  </header>
 
-  <form id="f" class="card" novalidate>
-    <div class="grid">
-      <div><label for="operator">Opérateur</label>
-        <select id="operator" name="operator">
-          <option>MTN</option><option>Airtel</option><option>Glo</option><option>9mobile</option>
-        </select></div>
-      <div><label for="account_type">Type de compte</label>
-        <select id="account_type" name="account_type">
-          <option value="prepaid">prepaid (prépayé)</option><option value="postpaid">postpaid (postpayé)</option>
-        </select></div>
-      <div><label for="credit_score">Score de crédit<small>de 300 à 1000</small></label>
-        <input id="credit_score" name="credit_score" type="number" step="any" value="720"></div>
-      <div><label for="credit_rating">Note de crédit</label>
-        <select id="credit_rating" name="credit_rating">
-          <option value="poor">poor (faible)</option><option value="fair">fair (moyenne)</option>
-          <option value="good" selected>good (bonne)</option><option value="excellent">excellent</option>
-        </select></div>
-      <div><label for="tenure_months">Ancienneté (mois)<small>entier ≥ 0</small></label>
-        <input id="tenure_months" name="tenure_months" type="number" step="1" value="36"></div>
-      <div><label for="avg_monthly_spend_ngn">Dépense mensuelle moyenne (NGN)<small>≥ 0</small></label>
-        <input id="avg_monthly_spend_ngn" name="avg_monthly_spend_ngn" type="number" step="any" value="25000"></div>
-      <div><label for="recharge_frequency_per_month">Recharges par mois<small>≥ 0</small></label>
-        <input id="recharge_frequency_per_month" name="recharge_frequency_per_month" type="number" step="any" value="15"></div>
-      <div><label for="payment_consistency_score">Régularité des paiements<small>de 0 à 1</small></label>
-        <input id="payment_consistency_score" name="payment_consistency_score" type="number" step="any" value="0.55"></div>
-      <div><label for="late_payment_count">Retards de paiement<small>entier ≥ 0</small></label>
-        <input id="late_payment_count" name="late_payment_count" type="number" step="1" value="2"></div>
-    </div>
-    <div class="actions">
-      <button type="submit" class="primary" id="go">Prédire le risque</button>
-      <button type="button" id="reset">Réinitialiser</button>
-    </div>
-  </form>
+  <div class="layout">
+    <form id="f" class="panel" novalidate>
+      <fieldset>
+        <legend>Compte</legend>
+        <div class="row">
+          <div class="field"><span class="name" id="lbl-operator">Opérateur</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lbl-operator">
+              <input type="radio" name="operator" id="op-mtn" value="MTN" checked><label for="op-mtn">MTN</label>
+              <input type="radio" name="operator" id="op-airtel" value="Airtel"><label for="op-airtel">Airtel</label>
+              <input type="radio" name="operator" id="op-glo" value="Glo"><label for="op-glo">Glo</label>
+              <input type="radio" name="operator" id="op-9m" value="9mobile"><label for="op-9m">9mobile</label>
+            </div></div>
+          <div class="field"><span class="name" id="lbl-account">Type de compte</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lbl-account">
+              <input type="radio" name="account_type" id="at-pre" value="prepaid" checked><label for="at-pre">Prépayé</label>
+              <input type="radio" name="account_type" id="at-post" value="postpaid"><label for="at-post">Postpayé</label>
+            </div></div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="tenure_months">Ancienneté <span class="hint">en mois</span></label>
+            <input id="tenure_months" name="tenure_months" type="number" step="1" value="36"></div>
+        </div>
+      </fieldset>
 
-  <section id="errors" class="card" hidden aria-live="polite"></section>
+      <fieldset>
+        <legend>Crédit</legend>
+        <div class="row">
+          <div class="field"><label for="credit_score">Score de crédit <span class="hint">de 300 à 1000</span></label>
+            <input id="credit_score" name="credit_score" type="number" step="any" value="720"></div>
+        </div>
+        <div class="row one">
+          <div class="field"><span class="name" id="lbl-rating">Note de crédit</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lbl-rating">
+              <input type="radio" name="credit_rating" id="cr-poor" value="poor"><label for="cr-poor">Faible</label>
+              <input type="radio" name="credit_rating" id="cr-fair" value="fair"><label for="cr-fair">Moyenne</label>
+              <input type="radio" name="credit_rating" id="cr-good" value="good" checked><label for="cr-good">Bonne</label>
+              <input type="radio" name="credit_rating" id="cr-exc" value="excellent"><label for="cr-exc">Excellente</label>
+            </div></div>
+        </div>
+      </fieldset>
 
-  <section id="result" class="card" hidden aria-live="polite">
-    <div class="note">Classe de risque prédite</div>
-    <p><span id="badge" class="badge"></span></p>
-    <div id="bars"></div>
-  </section>
+      <fieldset>
+        <legend>Usage et paiements</legend>
+        <div class="row">
+          <div class="field"><label for="avg_monthly_spend_ngn">Dépense mensuelle <span class="hint">en NGN</span></label>
+            <input id="avg_monthly_spend_ngn" name="avg_monthly_spend_ngn" type="number" step="any" value="25000"></div>
+          <div class="field"><label for="recharge_frequency_per_month">Recharges <span class="hint">par mois</span></label>
+            <input id="recharge_frequency_per_month" name="recharge_frequency_per_month" type="number" step="any" value="15"></div>
+          <div class="field"><label for="payment_consistency_score">Régularité des paiements <span class="hint">de 0 à 1</span></label>
+            <input id="payment_consistency_score" name="payment_consistency_score" type="number" step="any" value="0.55"></div>
+          <div class="field"><label for="late_payment_count">Retards de paiement <span class="hint">nombre entier</span></label>
+            <input id="late_payment_count" name="late_payment_count" type="number" step="1" value="2"></div>
+        </div>
+      </fieldset>
 
-  <p class="note">Outil de démonstration : le modèle est entraîné sur des données synthétiques et reconnaît mal la classe « medium ». Ses résultats ne doivent pas servir à une vraie décision de crédit.</p>
+      <div class="actions">
+        <button type="submit" class="primary" id="go">Prédire le risque</button>
+        <button type="button" id="reset">Réinitialiser</button>
+      </div>
+    </form>
+
+    <aside class="result-col panel" aria-live="polite">
+      <div class="gauge-wrap">
+        <svg class="gauge" id="gauge" data-state="idle" viewBox="0 0 240 132" role="img" aria-label="Jauge de risque">
+          <path class="zone low" data-class="low" d="M 30.1 116.9 A 90 90 0 0 1 72.3 43.7"/>
+          <path class="zone medium" data-class="medium" d="M 77.7 40.5 A 90 90 0 0 1 162.3 40.5"/>
+          <path class="zone high" data-class="high" d="M 167.7 43.7 A 90 90 0 0 1 209.9 116.9"/>
+          <path class="needle" id="needle" d="M 46 120 L 120 114.5 L 120 125.5 Z"/>
+          <circle class="hub" cx="120" cy="120" r="9"/>
+        </svg>
+        <div class="scale" id="scale"><span data-class="low">Faible</span><span data-class="medium">Moyen</span><span data-class="high">Élevé</span></div>
+      </div>
+      <div class="verdict idle" id="verdict">En attente d’une prédiction</div>
+      <p class="meaning" id="meaning">Remplissez le formulaire puis lancez la prédiction.</p>
+      <div class="probs" id="probs" hidden>
+        <div id="bars"></div>
+      </div>
+      <div class="notice" id="errors" hidden></div>
+    </aside>
+  </div>
+
+  <p class="foot">Outil de démonstration : le modèle est entraîné sur des données synthétiques et reconnaît mal la classe « moyen ». Ses résultats ne doivent pas servir à une vraie décision de crédit.</p>
 </main>
 
 <script>
@@ -100,15 +197,69 @@
   var NUMERIC = ["credit_score", "tenure_months", "avg_monthly_spend_ngn",
                  "recharge_frequency_per_month", "payment_consistency_score", "late_payment_count"];
   var TEXT = ["operator", "credit_rating", "account_type"];
+  var FIELD_LABELS = {
+    operator: "Opérateur", account_type: "Type de compte", credit_score: "Score de crédit",
+    credit_rating: "Note de crédit", tenure_months: "Ancienneté", avg_monthly_spend_ngn: "Dépense mensuelle",
+    recharge_frequency_per_month: "Recharges par mois", payment_consistency_score: "Régularité des paiements",
+    late_payment_count: "Retards de paiement"
+  };
   var CLASS_LABELS = { low: "Risque faible", medium: "Risque moyen", high: "Risque élevé" };
+  var SHORT = { low: "Faible", medium: "Moyen", high: "Élevé" };
+  var MEANING = {
+    low: "Profil plutôt fiable : le modèle juge l’impayé peu probable.",
+    medium: "Profil intermédiaire : le modèle hésite, à examiner avec prudence.",
+    high: "Profil à risque : le modèle juge l’impayé probable."
+  };
+  var NEEDLE_DEG = { low: 30, medium: 90, high: 150 };
   var ORDER = ["low", "medium", "high"];
 
   var form = document.getElementById("f");
   var go = document.getElementById("go");
-  var resultBox = document.getElementById("result");
+  var gauge = document.getElementById("gauge");
+  var needle = document.getElementById("needle");
+  var verdict = document.getElementById("verdict");
+  var meaning = document.getElementById("meaning");
+  var probs = document.getElementById("probs");
+  var bars = document.getElementById("bars");
   var errorsBox = document.getElementById("errors");
+  var scaleSpans = document.querySelectorAll("#scale span");
+  var panel = document.querySelector(".result-col");
+
+  // Sur petit écran, le résultat est sous le formulaire : on y amène la vue.
+  function bringResultIntoView() {
+    if (!window.matchMedia("(max-width: 879px)").matches) return;
+    var calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    panel.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "nearest" });
+  }
+
+  function getText(name) {
+    var checked = form.querySelector('input[name="' + name + '"]:checked');
+    return checked ? checked.value : "";
+  }
+  function setText(name, value) {
+    form.querySelectorAll('input[name="' + name + '"]').forEach(function (r) { r.checked = (r.value === value); });
+  }
+
   var defaults = {};
-  NUMERIC.concat(TEXT).forEach(function (id) { defaults[id] = form.elements[id].value; });
+  TEXT.forEach(function (id) { defaults[id] = getText(id); });
+  NUMERIC.forEach(function (id) { defaults[id] = form.elements[id].value; });
+
+  function setActive(cls) {
+    gauge.querySelectorAll(".zone").forEach(function (z) {
+      z.classList.toggle("active", z.getAttribute("data-class") === cls);
+    });
+    scaleSpans.forEach(function (s) { s.classList.toggle("on", s.getAttribute("data-class") === cls); });
+  }
+
+  function showIdle() {
+    gauge.setAttribute("data-state", "idle");
+    setActive(null);
+    needle.style.transform = "rotate(90deg)";
+    verdict.textContent = "En attente d’une prédiction";
+    verdict.className = "verdict idle";
+    meaning.textContent = "Remplissez le formulaire puis lancez la prédiction.";
+    probs.hidden = true;
+  }
 
   function showErrors(title, messages) {
     errorsBox.textContent = "";
@@ -119,40 +270,47 @@
     messages.forEach(function (m) { var li = document.createElement("li"); li.textContent = m; ul.appendChild(li); });
     errorsBox.appendChild(ul);
     errorsBox.hidden = false;
-    resultBox.hidden = true;
+    bringResultIntoView();
   }
 
   function showResult(data) {
-    var badge = document.getElementById("badge");
-    badge.textContent = CLASS_LABELS[data.risk_class] || data.risk_class;
-    badge.className = "badge " + data.risk_class;
-    var bars = document.getElementById("bars");
+    var cls = data.risk_class;
+    errorsBox.hidden = true;
+    gauge.setAttribute("data-state", "done");
+    setActive(cls);
+    needle.style.transform = "rotate(" + (NEEDLE_DEG[cls] !== undefined ? NEEDLE_DEG[cls] : 90) + "deg)";
+    verdict.textContent = CLASS_LABELS[cls] || cls;
+    verdict.className = "verdict " + cls;
+    meaning.textContent = MEANING[cls] || "";
+
     bars.textContent = "";
     ORDER.forEach(function (name) {
       if (!(name in data.probabilities)) return;
       var pct = data.probabilities[name] * 100;
       var row = document.createElement("div"); row.className = "bar-row";
-      var label = document.createElement("span"); label.textContent = CLASS_LABELS[name];
+      var label = document.createElement("span"); label.textContent = SHORT[name];
       var bar = document.createElement("div"); bar.className = "bar";
-      var fill = document.createElement("span"); fill.className = name; fill.style.width = pct.toFixed(1) + "%";
+      var fill = document.createElement("span"); fill.className = name; fill.style.width = "0%";
       bar.appendChild(fill);
-      var value = document.createElement("span"); value.textContent = pct.toFixed(1) + " %";
+      var value = document.createElement("span"); value.className = "pct"; value.textContent = pct.toFixed(1) + " %";
       row.appendChild(label); row.appendChild(bar); row.appendChild(value);
       bars.appendChild(row);
+      requestAnimationFrame(function () { requestAnimationFrame(function () { fill.style.width = pct.toFixed(1) + "%"; }); });
     });
-    resultBox.hidden = false;
-    errorsBox.hidden = true;
+    probs.hidden = false;
+    bringResultIntoView();
   }
 
   form.addEventListener("submit", function (event) {
     event.preventDefault();
     var payload = {};
-    TEXT.forEach(function (id) { payload[id] = form.elements[id].value; });
+    TEXT.forEach(function (id) { payload[id] = getText(id); });
     NUMERIC.forEach(function (id) {
       var raw = form.elements[id].value.trim();
       payload[id] = raw === "" ? null : Number(raw);
     });
     go.disabled = true;
+    go.textContent = "Calcul en cours…";
     fetch("/predict", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -163,22 +321,27 @@
       })
       .then(function (r) {
         if (r.ok) { showResult(r.data); return; }
+        showIdle();
         if (Array.isArray(r.data.errors)) {
-          showErrors("Données invalides :", r.data.errors.map(function (e) { return e.field + " : " + e.message; }));
+          showErrors("Corrigez ces champs :", r.data.errors.map(function (e) {
+            return (FIELD_LABELS[e.field] || e.field) + " : " + e.message;
+          }));
         } else {
           showErrors("Erreur :", [r.data.detail || "Réponse inattendue du serveur."]);
         }
       })
       .catch(function () {
-        showErrors("Erreur :", ["Impossible de joindre l’API. Vérifiez qu’elle est bien lancée."]);
+        showIdle();
+        showErrors("API injoignable :", ["Vérifiez qu’elle est bien lancée, puis réessayez."]);
       })
-      .then(function () { go.disabled = false; });
+      .then(function () { go.disabled = false; go.textContent = "Prédire le risque"; });
   });
 
   document.getElementById("reset").addEventListener("click", function () {
-    Object.keys(defaults).forEach(function (id) { form.elements[id].value = defaults[id]; });
-    resultBox.hidden = true;
+    TEXT.forEach(function (id) { setText(id, defaults[id]); });
+    NUMERIC.forEach(function (id) { form.elements[id].value = defaults[id]; });
     errorsBox.hidden = true;
+    showIdle();
   });
 })();
 </script>

@@ -1,0 +1,31 @@
+﻿# Git et environnements locaux
+.git
+.venv
+**/.venv
+__pycache__
+**/__pycache__
+.pytest_cache
+
+# Données et configuration DVC
+.dvc
+*.dvc
+*.csv
+
+# Modèles inutilisés pour l'API
+models/knn_default_risk_model.joblib
+models/rf_xgb_knn_ensemble.joblib
+
+# Rapports et fichiers de travail
+reports
+notebooks
+tests
+docs
+word.docx
+~*
+
+# Secrets éventuels
+.env
+.env.*
+client_secret*.json
+token*.json
+credentials*.json

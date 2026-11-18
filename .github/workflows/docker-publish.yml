@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   tests:
-    name: Tests de l'application
+    name: Lint et tests de l'application
     runs-on: ubuntu-latest
 
     steps:
@@ -29,6 +29,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements-api.txt -r requirements-mlops.txt
+          python -m pip install ruff==0.17.5
+
+      - name: Vérifier le style du code
+        continue-on-error: true
+        run: ruff check src tests
 
       - name: Lancer les tests
         run: python -m pytest -q

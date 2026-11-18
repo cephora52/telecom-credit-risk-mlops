@@ -59,44 +59,47 @@ Le notebook `notebooks/xgboost_evaluation.ipynb` contient une exploration et une
 - Registre MLflow avec versions candidates, validation et retour arrière
 - Surveillance par PSI et test de Kolmogorov-Smirnov
 - Documentation de l’API, du registre et de la surveillance dans `docs/`
+- Construction et essai d’une image Docker
 
 ## État des livrables
 
 | Livrable | État |
 |---|---|
-| Dépôt Git documenté | En place ; le README doit rester synchronisé avec l’avancement |
-| Données versionnées avec DVC | Configuré avec un remote Google Drive |
+| Dépôt Git organisé et documenté | En place |
+| Données versionnées avec DVC | Remote Google Drive configuré |
 | Entraînement et évaluation XGBoost | En place |
-| API de prédiction | En place |
-| Tests automatisés | Écrits ; leur exécution doit être vérifiée dans l’environnement du projet |
-| Suivi et registre MLflow | En place en local |
-| Surveillance de la dérive et de la performance | Première version en place, sur des fichiers CSV fournis |
-| Image Docker | À réaliser |
-| CI/CD et entraînement continu | À réaliser |
-| Rapport final et architecture | À compléter avec les décisions et résultats définitifs |
+| API et interface web | En place et testées |
+| Tests automatisés | En place ; tests locaux et vérification PR réussis |
+| Suivi MLflow et registre de modèles | Première version en place |
+| Surveillance de la dérive | Première version en place |
+| Dockerfile et `.dockerignore` | En place |
+| Image Docker | Construite et testée |
+| CI GitHub Actions | Tests sur pull request configurés |
+| Publication de l’image GHCR | Workflow configuré ; publication après fusion dans `main` |
 
 ## Organisation du dépôt
-
-```text
 .
-├── .dvc/                         # Configuration versionnée du remote DVC
-├── .github/workflows/            # Emplacement prévu pour les workflows GitHub Actions
-├── docs/                         # Guides API, MLflow et surveillance
-├── model_registry/                # Emplacement prévu pour les éléments du registre
-├── models/                        # Modèle et fichiers de référence locaux
-├── notebooks/                     # Exploration et évaluation
+├── .dvc/                         # Configuration du remote DVC
+├── .github/workflows/
+│   └── docker-publish.yml        # Tests et publication de l’image Docker
+├── docs/                         # Documentation API, MLflow et surveillance
+├── models/
+│   └── default_risk_model.joblib # Modèle utilisé par l’API
+├── notebooks/                    # Exploration et évaluation
 ├── reports/                       # Métriques, matrices et rapports
 ├── src/telecom_mlops/
 │   ├── api.py                     # API FastAPI
-│   ├── config.py                  # Chemins, cible et variables du modèle
-│   ├── monitoring.py              # Surveillance de la dérive et des performances
-│   ├── mlflow_settings.py         # Configuration MLflow et seuils
-│   ├── registry.py                # Validation et retour arrière du modèle
-│   ├── train.py                   # Entraînement de référence XGBoost
+│   ├── config.py                  # Configuration des variables et chemins
+│   ├── mlflow_settings.py         # Configuration MLflow
+│   ├── monitoring.py              # Surveillance de la dérive
+│   ├── registry.py                # Gestion du registre de modèles
+│   ├── train.py                   # Entraînement XGBoost de référence
 │   ├── train_mlflow.py            # Entraînement suivi par MLflow
-│   └── static/index.html          # Interface web de l’API
+│   └── static/index.html          # Interface web de prédiction
 ├── tests/                         # Tests automatisés
-├── requirements-api.txt           # Dépendances API et tests API
-├── requirements-mlops.txt          # Dépendances MLflow et surveillance
+├── Dockerfile                     # Construction de l’image Docker
+├── .dockerignore                  # Fichiers exclus de l’image
+├── requirements-api.txt           # Dépendances de l’API et tests
+├── requirements-mlops.txt         # Dépendances MLflow et surveillance
 ├── telecom_credit_scoring_data.csv.dvc
 └── README.md

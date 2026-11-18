@@ -23,11 +23,6 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy.stats import ks_2samp
-from sklearn.metrics import f1_score, recall_score
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
-
 from config import DATA_PATH, FEATURES, TARGET
 from mlflow_settings import (
     ALIAS_CANDIDATE,
@@ -44,6 +39,10 @@ from mlflow_settings import (
     REGISTERED_MODEL_NAME,
     TRACKING_URI,
 )
+from scipy.stats import ks_2samp
+from sklearn.metrics import f1_score, recall_score
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
 
 SEVERITY = {"ok": 0, "warning": 1, "critical": 2}
 
@@ -177,7 +176,7 @@ def model_performance(current):
         "f1_macro_actuel": round(current_f1, 4),
         "baisse": round(drop, 4),
         "rappel_par_classe": {name: round(float(value), 4) for name, value in zip(classes, recalls)},
-        "lignes_evaluees": int(len(labelled)),
+        "lignes_evaluees": len(labelled),
         "niveau": level_from_drop(drop),
     }
 
@@ -276,7 +275,7 @@ def main():
     global_level = max(levels, key=lambda level: SEVERITY[level])
 
     report = {
-        "lignes_recentes": int(len(current)),
+        "lignes_recentes": len(current),
         "derive_donnees": drift,
         "performance": performance,
         "statut_global": global_level,

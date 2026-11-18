@@ -19,7 +19,7 @@ import joblib
 import pandas as pd
 import sklearn
 import xgboost
-
+from config import DATA_PATH, FEATURES, METRICS_PATH, MODEL_PATH, TARGET
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.metrics import (
@@ -35,11 +35,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.utils.class_weight import compute_sample_weight
-
 from xgboost import XGBClassifier
-
-from config import DATA_PATH, FEATURES, METRICS_PATH, MODEL_PATH, TARGET
-
 
 # Paramètres utilisés pour rendre l'entraînement reproductible.
 RANDOM_STATE = 42

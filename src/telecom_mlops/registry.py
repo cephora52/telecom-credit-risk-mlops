@@ -21,7 +21,6 @@ import sys
 import mlflow
 from mlflow.exceptions import MlflowException
 from mlflow.tracking import MlflowClient
-
 from mlflow_settings import (
     ALIAS_CANDIDATE,
     ALIAS_PREVIOUS,
@@ -96,7 +95,7 @@ def show_status():
     for version in sorted(versions, key=lambda item: int(item.version)):
         metrics = run_metrics(client, version)
         print(
-            f"{str(version.version):8s}"
+            f"{version.version!s:8s}"
             f"{','.join(aliases.get(str(version.version), [])) or '-':22s}"
             f"{version.tags.get('stage', '-'):12s}"
             f"{metrics.get('f1_macro', float('nan')):<10.4f}"

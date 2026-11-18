@@ -26,11 +26,19 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import mlflow
 import mlflow.sklearn
-import numpy as np
 import pandas as pd
 import sklearn
 import xgboost
+from config import DATA_PATH, FEATURES, ROOT, TARGET
 from mlflow.tracking import MlflowClient
+from mlflow_settings import (
+    ALIAS_CANDIDATE,
+    ARTIFACT_ROOT,
+    EXPERIMENT_NAME,
+    REFERENCE_SAMPLE_PATH,
+    REGISTERED_MODEL_NAME,
+    TRACKING_URI,
+)
 from sklearn.metrics import (
     accuracy_score,
     classification_report,
@@ -44,18 +52,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import LabelEncoder
 from sklearn.utils.class_weight import compute_sample_weight
-from xgboost import XGBClassifier
-
-from config import DATA_PATH, FEATURES, ROOT, TARGET
-from mlflow_settings import (
-    ALIAS_CANDIDATE,
-    ARTIFACT_ROOT,
-    EXPERIMENT_NAME,
-    REFERENCE_SAMPLE_PATH,
-    REGISTERED_MODEL_NAME,
-    TRACKING_URI,
-)
 from train import RANDOM_STATE, TEST_SIZE, XGBOOST_PARAMETERS, build_preprocessor
+from xgboost import XGBClassifier
 
 
 def parse_arguments():
@@ -84,7 +82,7 @@ def git_commit():
         return subprocess.check_output(
             ["git", "rev-parse", "--short", "HEAD"], cwd=ROOT, stderr=subprocess.DEVNULL
         ).decode().strip()
-    except Exception:
+    except (subprocess.CalledProcessError, FileNotFoundError):
         return "inconnu"
 
 

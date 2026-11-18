@@ -9,8 +9,9 @@ import pandas as pd
 # Les scripts MLOps s'importent comme train.py : depuis src/telecom_mlops.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src" / "telecom_mlops"))
 
-from monitoring import level_from_drop, level_from_psi, psi  # noqa: E402
-from registry import check_gate  # noqa: E402
+from registry import check_gate
+
+from monitoring import level_from_drop, level_from_psi, psi
 
 
 def test_psi_is_near_zero_for_identical_data():

@@ -1,3 +1,4 @@
+
 """Tests de la surveillance (PSI, niveaux) et des critères de validation du registre."""
 
 import sys
